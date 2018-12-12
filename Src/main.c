@@ -67,8 +67,6 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 float SetServoAngle(float angle, ADC_HandleTypeDef hadc, TIM_HandleTypeDef htim);
-int filter(int val);
-int atoi(char s[]);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -126,18 +124,14 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	htim2.Instance->CCR1=50;
-	HAL_Delay(100);
-	htim2.Instance->CCR1=50;
-	HAL_Delay(1000);
 	
   while (1)
   {
 		
-		HAL_ADC_Start(&hadc1);
-		HAL_ADC_PollForConversion(&hadc1,100);
-		int adcValue1=HAL_ADC_GetValue(&hadc1);
-		HAL_ADC_Stop(&hadc1);
+		//HAL_ADC_Start(&hadc1);
+		//HAL_ADC_PollForConversion(&hadc1,100);
+		//int adcValue1=HAL_ADC_GetValue(&hadc1);
+		//HAL_ADC_Stop(&hadc1);
 		
 		float angle1=SetServoAngle(60,hadc1,htim2);
 		
@@ -210,34 +204,6 @@ float SetServoAngle(float angle, ADC_HandleTypeDef hadc, TIM_HandleTypeDef htim)
 	htim.Instance->CCR1=(int)(5*angle/9+25);
 	
 	return angle_from_feedback;
-}
-int filter(int val) 
-	{  
-		
-	int varVolt = 12;  // middle error
-	float varProcess = 0.05; // velosity of reaction
-	int Pc = 0;
-	int G = 0;
-	int P = 1;
-	int Xp = 0;
-	int Zp = 0;
-	int Xe = 0;	
-  Pc = P + varProcess;
-  G = Pc/(Pc + varVolt);
-  P = (1-G)*Pc;
-  Xp = Xe;
-  Zp = Xp;
-  Xe = G*(val-Zp)+Xp; 
-  return(Xe);
-		
-}
-	int atoi(char s[])
-{
-    int i, n;
-    
-    for(i=0, n=0; s[i]>='0' && s[i]<='9'; i++)
-       n = n*10 + (s[i] - '0');
-    return n;
 }
 
 
