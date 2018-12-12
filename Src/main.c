@@ -49,7 +49,7 @@
 /* USER CODE BEGIN Includes */
 #define MAX_ADC_VALUE 2300
 #define MIN_ADC_VALUE 400
-#define ADC_TO_ANGLE 10
+
 
 
 /* USER CODE END Includes */
@@ -66,7 +66,9 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+float SetServoAngle(float angle, ADC_HandleTypeDef hadc, TIM_HandleTypeDef htim);
+int filter(int val);
+int atoi(char s[]);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -77,9 +79,6 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-float SetServoAngle(float angle,ADC_HandleTypeDef hadc, TIM_HandleTypeDef htim);
-int atoi(char s[]);
-
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -120,8 +119,6 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM2_Init();
   MX_ADC1_Init();
-	HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
-	
   /* USER CODE BEGIN 2 */
 	uint8_t Data[32];
 	
