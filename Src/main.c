@@ -67,8 +67,8 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-	float SetServoAngle( float angle, ADC_HandleTypeDef *adcHandle, TIM_HandleTypeDef *timHandle );
-	int filter(int val);
+float SetServoAngle( float angle, ADC_HandleTypeDef *adcHandle, TIM_HandleTypeDef *timHandle );
+int filter(int val);
 
 /* USER CODE END PM */
 
@@ -121,11 +121,11 @@ int main(void)
   MX_TIM2_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-		uint8_t Data[32];
+	uint8_t Data[32];
 	
-		HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
-		HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_2);
-		HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_3);
+	HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_3);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -135,17 +135,17 @@ int main(void)
   while (1)
   {
 				
-			//HAL_ADC_Start(&hadc1);
-			//HAL_ADC_PollForConversion(&hadc1,100);
-			//int adcValue1=HAL_ADC_GetValue(&hadc1);
-			//HAL_ADC_Stop(&hadc1);
-			
-			float angle1=SetServoAngle( 60,&hadc1,&htim2 );
-			
-			int size=sprintf( (char *)Data,"\r\n%.04f",angle1 );
-			//HAL_UART_Receive(&huart2, (uint8_t*)angle,  sizeof(angle), 1000);
-			HAL_UART_Transmit(&huart2, Data, size, 1000);
-			
+		//HAL_ADC_Start(&hadc1);
+		//HAL_ADC_PollForConversion(&hadc1,100);
+		//int adcValue1=HAL_ADC_GetValue(&hadc1);
+		//HAL_ADC_Stop(&hadc1);
+		
+		float angle1=SetServoAngle( 60,&hadc1,&htim2 );
+		
+		int size=sprintf( (char *)Data,"\r\n%.04f",angle1 );
+		//HAL_UART_Receive(&huart2, (uint8_t*)angle,  sizeof(angle), 1000);
+		HAL_UART_Transmit(&huart2, Data, size, 1000);
+		
 
     /* USER CODE END WHILE */
 
@@ -198,38 +198,38 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 float SetServoAngle( float angle, ADC_HandleTypeDef *adcHandle, TIM_HandleTypeDef *timHandle )
-	{ 
-		HAL_ADC_Start(adcHandle);
-		HAL_ADC_PollForConversion(adcHandle,100);
-		int adcValue=HAL_ADC_GetValue(adcHandle);
-		HAL_ADC_Stop(adcHandle);
+{ 
+	HAL_ADC_Start(adcHandle);
+	HAL_ADC_PollForConversion(adcHandle,100);
+	int adcValue=HAL_ADC_GetValue(adcHandle);
+	HAL_ADC_Stop(adcHandle);
 
-		float angleFromFeedback=( adcValue-MIN_ADC_VALUE )*180/( MAX_ADC_VALUE-MIN_ADC_VALUE );
+	float angleFromFeedback=( adcValue-MIN_ADC_VALUE )*180/( MAX_ADC_VALUE-MIN_ADC_VALUE );
 
-		timHandle->Instance->CCR1=(int)( 5*angle/9+25 );
+	timHandle->Instance->CCR1=(int)( 5*angle/9+25 );
 
-		return angleFromFeedback;
+	return angleFromFeedback;
 }
 
 
 int filter( int val ) 
 {  
 	
-		int varVolt = 12;  // middle error
-		float varProcess = 0.05; // velosity of reaction
-		int Pc = 0;
-		int G = 0;
-		int P = 1;
-		int Xp = 0;
-		int Zp = 0;
-		int Xe = 0;	
-		Pc = P + varProcess;
-		G = Pc/(Pc + varVolt);
-		P = (1-G)*Pc;
-		Xp = Xe;
-		Zp = Xp;
-		Xe = G*(val-Zp)+Xp; 
-		return(Xe);
+	int varVolt = 12;  // middle error
+	float varProcess = 0.05; // velosity of reaction
+	int Pc = 0;
+	int G = 0;
+	int P = 1;
+	int Xp = 0;
+	int Zp = 0;
+	int Xe = 0;	
+	Pc = P + varProcess;
+	G = Pc/(Pc + varVolt);
+	P = (1-G)*Pc;
+	Xp = Xe;
+	Zp = Xp;
+	Xe = G*(val-Zp)+Xp; 
+	return(Xe);
 	
 }
 
