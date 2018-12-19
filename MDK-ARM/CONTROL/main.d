@@ -32,7 +32,5 @@ control\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 control\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 control\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 control\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-control\main.o: ../Inc/adc.h
-control\main.o: ../Inc/tim.h
-control\main.o: ../Inc/usart.h
-control\main.o: ../Inc/gpio.h
+control\main.o: ../Inc/servo.h
+control\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
