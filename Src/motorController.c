@@ -1,5 +1,23 @@
 #include "motorController.h"
 
+#define MAX_CCR 110
+#define MIX_CCR 30
+#define DEAD_ZONE_OF_CCR 5
+
+int constrain( int value, int minValue, int maxValue )
+{
+	if( value > maxValue )
+	{
+		value = 100;
+	}
+	else if( value < minValue )
+	{
+		value = -100;
+	}
+	return value;
+	
+}
+
 void MotorsInit( TIM_HandleTypeDef *timHandle ) 
 {
 	timHandle->Instance->CCR1 = 75;
@@ -17,18 +35,34 @@ void MotorsInit( TIM_HandleTypeDef *timHandle )
 
 void SetMotorThrust( int Force, TIM_HandleTypeDef *timHandle, int timChanel )
 {
-	switch (timChanel)
+	
+	Force = constrain( Force, -100, 100 );
+	
+	int ccr = 75 + Force/2;
+	
+	ccr = constrain( ccr, MIX_CCR, MAX_CCR );
+	
+	if ( ccr < 75 + DEAD_ZONE_OF_CCR && ccr > 0 )
+	{
+		ccr = 75 + DEAD_ZONE_OF_CCR;
+	}
+	else if( ccr > 75 - DEAD_ZONE_OF_CCR && ccr < 0 )
+	{
+		ccr = 75 - DEAD_ZONE_OF_CCR;
+	}
+	
+	switch ( timChanel )
 	{
 		
 		case 1:
-		timHandle->Instance->CCR1 = Force; break;		
+		timHandle->Instance->CCR1 = ccr; break;		
 		case 2:
-		timHandle->Instance->CCR1 = Force; break;		
+		timHandle->Instance->CCR2 = ccr; break;		
 		case 3:
-		timHandle->Instance->CCR1 = Force; break;	
+		timHandle->Instance->CCR3 = ccr; break;	
 		case 4:
-		timHandle->Instance->CCR1 = Force; break;	
-		default:break;
+		timHandle->Instance->CCR4 = ccr; break;	
+		default: break;
 		
 	}
 }

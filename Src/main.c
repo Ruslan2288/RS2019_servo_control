@@ -162,10 +162,13 @@ int main(void)
 				
 				//HAL_UART_Transmit( &huart2, dataAngle, sizeof(dataAngle), 1000 );
 				angle1=SetServoAngle(atoi((char*)dataAngle) ,&hadc1,&htim2 );
-				int size=sprintf( (char *)Data,"\r\n%.02f",angle1 );
-				HAL_UART_Transmit( &huart2, Data, size, 500 );
+				
 				
 			}
+			angle1=GetServoAngle(&hadc1);
+			
+			int size=sprintf( (char *)Data,"\r\n%.02f",angle1 );
+			HAL_UART_Transmit( &huart2, Data, size, 500 );
 				
 
 				
